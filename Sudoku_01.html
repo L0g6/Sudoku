@@ -23,6 +23,12 @@
         table.table-bordered tr td:nth-child(6n+0) {
             border-right: 4px solid #11120f; /* Borde derecho más ancho */
         }
+
+        /* Estilo para ampliar el borde inferior de la tercera y sexta fila */
+        table.table-bordered tr:nth-child(4)  ,
+        table.table-bordered tr:nth-child(7)  {
+          border-bottom: 4px solid #11120f; /* Borde inferior más ancho */
+        } 
     
         /* Estilo para los botones */
         .button-container {
@@ -75,7 +81,7 @@
             const value = input.value;
 
             // Asegúrate de que solo se permita un dígito del 1 al 9
-            if (value.length === 1 && /^[1-9]$/.test(value)) {
+            if (value.length === 1 and /^[1-9]$/.test(value)) {
                 input.style.color = 'black'; // Restaura el color del texto
             } else {
                 input.style.color = 'red'; // Muestra el texto en rojo si la entrada es inválida
