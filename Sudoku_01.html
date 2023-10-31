@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku 9x9</title>
+</head>
+<body>
+    <table border="1">
+        <tbody>
+            <!-- Crea un tablero 9x9 de cuadros de texto -->
+            <script>
+                for (let i = 0; i < 9; i++) {
+                    document.write("<tr>");
+                    for (let j = 0; j < 9; j++) {
+                        document.write('<td><input type="text" class="sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>');
+                    }
+                    document.write("</tr>");
+                }
+            </script>
+        </tbody>
+    </table>
+
+    <script>
+        // Función para validar la entrada en los cuadros de texto
+        function validateInput(input) {
+            const value = input.value;
+
+            // Asegúrate de que solo se permita un dígito del 1 al 9
+            if (value.length === 1 && /^[1-9]$/.test(value)) {
+                input.style.color = 'black'; // Restaura el color del texto
+            } else {
+                input.style.color = 'red'; // Muestra el texto en rojo si la entrada es inválida
+            }
+        }
+    </script>
+</body>
+</html>
