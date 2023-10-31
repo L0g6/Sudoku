@@ -12,9 +12,35 @@
             text-align: center;
             font-size: 1.5em;
         }
+            /* Estilo para los botones */
+            .button-container {
+            display: flex;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: border-color 0.3s; /* Transición de color de borde */
+        }
+
+        .button:hover {
+            border-color: #2980b9; /* Color de borde al pasar el ratón por encima */
+        }
+
     </style>
 </head>
 <body>
+    <div class="button-container">
+        <button class="button">Nuevo</button>
+        <button class="button">Reiniciar</button>
+        <button class="button">Comprobar</button>
+        <button class="button">Resolver</button>
+    </div>
     <table class="table table-bordered">
         <tbody>
             <!-- Crea un tablero 9x9 de cuadros de texto -->
