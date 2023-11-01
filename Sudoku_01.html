@@ -15,7 +15,7 @@
         <button class="button">Nuevo</button>
         <button class="button">Reiniciar</button>
         <button class="button">Comprobar</button>
-        <button class="button">Resolver</button>
+        <button class="button" onclick="resolveSudoku()">Resolver</button>
     </div>
     <table class="table table-bordered">
         <tbody>
@@ -57,6 +57,27 @@
             } else {
                 input.style.color = 'red'; // Muestra el texto en rojo si la entrada es inválida
             }
+        }
+        // Función para resolver el Sudoku y mostrar el contenido en una nueva ventana
+        function resolveSudoku() {
+            const Cuadrado = []; // Array con los cuadrados del Sudoku
+
+            for (let i = 0; i < 3; i++) {
+                Cuadrado[i] = [];
+                for (let j = 0; j < 3; j++) {
+                    Cuadrado[i][j] = '';
+
+                    for (let row = 0; row < 3; row++) {
+                        for (let col = 0; col < 3; col++) {
+                            Cuadrado[i][j] += sudokuBoard[i * 3 + row][j * 3 + col];
+                        }
+                    }
+                }
+            }
+            console.log("Contenido de Cuadrado:");
+            console.log(Cuadrado);
+            console.log("Contenido de sudokuBoard:");
+            console.log(sudokuBoard);
         }
 
 
