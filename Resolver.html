@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sudoku 9x9 - Resolver</title>
+    <link rel="stylesheet" href="css/sudoku.css">
+</head>
+<body>
+    <table class="table table-bordered">
+        <tbody>
+            <!-- Crea un tablero 9x9 de cuadros de texto sin los botones -->
+            <script>
+                for (let i = 0; i < 9; i++) {
+                    document.write("<tr>");
+                    for (let j = 0; j < 9; j++) {
+                        document.write('<td><input type="text" class="form-control sudoku-cell" maxlength="1" readonly></td>');
+                    }
+                    document.write("</tr>");
+                }
+            </script>
+        </tbody>
+    </table>
+</body>
+</html>
