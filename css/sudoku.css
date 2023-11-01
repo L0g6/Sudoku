@@ -1,0 +1,47 @@
+        /* Personaliza el tamaño de los cuadros de texto */
+        .sudoku-cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        /* Estilo para centrar horizontal y verticalmente los cuadros de texto */
+        table.table-bordered td {
+            border: 1px solid #11120f;
+            padding: 2% 3.5%;
+        }
+
+        /* Estilo para los bordes derechos de la tercera y sexta columna de cada fila */
+        table.table-bordered tr td:nth-child(3n+0),
+        table.table-bordered tr td:nth-child(6n+0) {
+            border-right: 4px solid #11120f;
+            /* Borde derecho más ancho */
+        }
+
+        /* Estilo para ampliar el borde inferior de la tercera y sexta fila */
+        table.table-bordered tr:nth-child(4),
+        table.table-bordered tr:nth-child(7) {
+            border-bottom: 4px solid #11120f;
+            /* Borde inferior más ancho */
+        }
+
+        /* Estilo para los botones */
+        .button-container {
+            display: flex;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .button:hover {
+            border-color: #2980b9;
+        }
