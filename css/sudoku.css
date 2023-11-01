@@ -1,0 +1,27 @@
+/* Estilo para los cuadros de texto del sudoku */
+.sudoku-cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+/* Estilo para los botones */
+.button-container {
+    display: flex;
+}
+
+.button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: #627079;
+    color: white;
+    cursor: pointer;
+    transition: border-color 0.3s; /* Transición de color de borde */
+}
+
+.button:hover {
+    border-color: #839210; /* Color de borde al pasar el ratón por encima */
+}
