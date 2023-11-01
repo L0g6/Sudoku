@@ -3,7 +3,6 @@
 
 <head>
     <title>Sudoku 9x9</title>
-    <!-- Agrega la referencia a Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/sudoku.css">
     <style>
@@ -19,54 +18,41 @@
     </div>
     <table class="table table-bordered">
         <tbody>
-            <!-- Crea un tablero 9x9 de cuadros de texto -->
             <script>
-                const sudokuBoard = []; // Array principal para el tablero de Sudoku
+                const sudokuBoard = [];
                 for (let i = 0; i < 9; i++) {
                     document.write("<tr>");
                     for (let j = 0; j < 9; j++) {
-                        const cellId = `cell_${i}_${j}`; // Identificador único para cada input
+                        const cellId = `cell_${i}_${j}`;
                         document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
                     }
                     document.write("</tr>");
-                    sudokuBoard.push(Array(9).fill("0")); // Agrega una fila llena de "0" al tablero de Sudoku
+                    sudokuBoard.push(Array(9).fill("0"));
                 }
             </script>
         </tbody>
     </table>
 
     <script>
-        // Función para validar la entrada en los cuadros de texto
         function validateInput(input) {
             const value = input.value;
-
-            // Asegúrate de que solo se permita un dígito del 1 al 9
             if (value.length === 1 && /^[1-9]$/.test(value)) {
-                input.style.color = 'black'; // Restaura el color del texto
-                const id = input.id; // Obtiene el identificador del input
-                const [row, col] = id.split("_").slice(1); // Separa la fila y columna del identificador
-
-                // Convierte row y col a números enteros
+                input.style.color = 'black';
+                const id = input.id;
+                const [row, col] = id.split("_").slice(1);
                 const rowIndex = parseInt(row);
                 const colIndex = parseInt(col);
-
-                // Ahora, puedes asignar el valor al elemento correspondiente en sudokuBoard
                 sudokuBoard[rowIndex][colIndex] = value;
-                // Imprime el valor en la consola
-                // console.log("Valor introducido en fila " + rowIndex + ", columna " + colIndex + ": " + value);
             } else {
-                input.style.color = 'red'; // Muestra el texto en rojo si la entrada es inválida
+                input.style.color = 'red';
             }
         }
-        // Función para resolver el Sudoku y mostrar el contenido en una nueva ventana
         function resolveSudoku() {
-            const Cuadrado = []; // Array con los cuadrados del Sudoku
-
+            const Cuadrado = [];
             for (let i = 0; i < 3; i++) {
                 Cuadrado[i] = [];
                 for (let j = 0; j < 3; j++) {
                     Cuadrado[i][j] = '';
-
                     for (let row = 0; row < 3; row++) {
                         for (let col = 0; col < 3; col++) {
                             Cuadrado[i][j] += sudokuBoard[i * 3 + row][j * 3 + col];
@@ -74,16 +60,33 @@
                     }
                 }
             }
-            console.log("Contenido de Cuadrado:");
-            console.log(Cuadrado);
-            console.log("Contenido de sudokuBoard:");
-            console.log(sudokuBoard);
+
+            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            resolverWindow.document.write(
+                "<html><head><title>Sudoku Resuelto</title>" +
+                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
+                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
+            );
+            // Agrega una fila adicional al inicio y aplica el estilo CSS
+            resolverWindow.document.write("<tr style='border-bottom: 4px solid #11120f;'>");
+
+            for (let i = 0; i < 9; i++) {
+                resolverWindow.document.write("<tr>");
+                for (let j = 0; j < 9; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
+                    } else {
+                        resolverWindow.document.write(`<td>${Cuadrado[Math.floor(i / 3)][Math.floor(j / 3)].charAt((i % 3) * 3 + (j % 3))}</td>`);
+                    }
+                }
+                resolverWindow.document.write("</tr>");
+            }
+            resolverWindow.document.write("</table></body></html>");
         }
 
 
     </script>
 
-    <!-- Agrega la referencia a Bootstrap JS y jQuery si es necesario -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
