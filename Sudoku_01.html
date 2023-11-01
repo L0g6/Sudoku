@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Sudoku 9x9</title>
     <!-- Agrega la referencia a Bootstrap CSS -->
@@ -12,30 +13,32 @@
             text-align: center;
             font-size: 1.5em;
         }
-    
+
         /* Estilo para centrar horizontal y verticalmente los cuadros de texto */
         table.table-bordered td {
             border: 1px solid #11120f;
             padding: 2% 3.5%;
-       }
-    
+        }
+
         /* Estilo para los bordes derechos de la tercera y sexta columna de cada fila */
         table.table-bordered tr td:nth-child(3n+0),
         table.table-bordered tr td:nth-child(6n+0) {
-            border-right: 4px solid #11120f; /* Borde derecho más ancho */
+            border-right: 4px solid #11120f;
+            /* Borde derecho más ancho */
         }
 
         /* Estilo para ampliar el borde inferior de la tercera y sexta fila */
-        table.table-bordered tr:nth-child(4)  ,
-        table.table-bordered tr:nth-child(7)  {
-            border-bottom: 4px solid #11120f; /* Borde inferior más ancho */
+        table.table-bordered tr:nth-child(4),
+        table.table-bordered tr:nth-child(7) {
+            border-bottom: 4px solid #11120f;
+            /* Borde inferior más ancho */
         }
-    
+
         /* Estilo para los botones */
         .button-container {
             display: flex;
         }
-    
+
         .button {
             padding: 10px 20px;
             margin: 10px;
@@ -46,12 +49,13 @@
             cursor: pointer;
             transition: border-color 0.3s;
         }
-    
+
         .button:hover {
             border-color: #2980b9;
         }
     </style>
 </head>
+
 <body>
     <div class="button-container">
         <button class="button">Nuevo</button>
@@ -63,12 +67,15 @@
         <tbody>
             <!-- Crea un tablero 9x9 de cuadros de texto -->
             <script>
+                const sudokuBoard = []; // Array principal para el tablero de Sudoku
                 for (let i = 0; i < 9; i++) {
                     document.write("<tr>");
                     for (let j = 0; j < 9; j++) {
-                        document.write('<td><input type="text" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>');
+                        const cellId = `cell_${i}_${j}`; // Identificador único para cada input
+                        document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
                     }
                     document.write("</tr>");
+                    sudokuBoard.push(Array(9).fill("0")); // Agrega una fila llena de "0" al tablero de Sudoku
                 }
             </script>
         </tbody>
@@ -80,16 +87,30 @@
             const value = input.value;
 
             // Asegúrate de que solo se permita un dígito del 1 al 9
-            if (value.length === 1 and /^[1-9]$/.test(value)) {
+            if (value.length === 1 && /^[1-9]$/.test(value)) {
                 input.style.color = 'black'; // Restaura el color del texto
+                const id = input.id; // Obtiene el identificador del input
+                const [row, col] = id.split("_").slice(1); // Separa la fila y columna del identificador
+
+                // Convierte row y col a números enteros
+                const rowIndex = parseInt(row);
+                const colIndex = parseInt(col);
+
+                // Ahora, puedes asignar el valor al elemento correspondiente en sudokuBoard
+                sudokuBoard[rowIndex][colIndex] = value;
+                // Imprime el valor en la consola
+                // console.log("Valor introducido en fila " + rowIndex + ", columna " + colIndex + ": " + value);
             } else {
                 input.style.color = 'red'; // Muestra el texto en rojo si la entrada es inválida
             }
         }
+
+
     </script>
 
     <!-- Agrega la referencia a Bootstrap JS y jQuery si es necesario -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
+
 </html>
