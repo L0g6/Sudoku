@@ -64,33 +64,39 @@
         }
 
         function getMissingNumbers() {
-    const missingNumbers = [];
-    for (let i = 0; i < 9; i++) {
-        missingNumbers[i] = [];
-        for (let j = 0; j < 9; j++) {
-            if (sudokuBoard[i][j] === "0") {
-                const squareRow = Math.floor(i / 3) * 3;
-                const squareCol = Math.floor(j / 3) * 3;
-                const square = [];
-                for (let row = 0; row < 3; row++) {
-                    for (let col = 0; col < 3; col++) {
-                        square.push(sudokuBoard[squareRow + row][squareCol + col]);
+            const missingNumbers = [];
+            const usedInRow = Array(9).fill(0).map(() => new Set());
+            const usedInColumn = Array(9).fill(0).map(() => new Set());
+
+            for (let i = 0; i < 9; i++) {
+                missingNumbers[i] = [];
+                for (let j = 0; j < 9; j++) {
+                    if (sudokuBoard[i][j] === "0") {
+                        const squareRow = Math.floor(i / 3) * 3;
+                        const squareCol = Math.floor(j / 3) * 3;
+                        const square = [];
+                        for (let row = 0; row < 3; row++) {
+                            for (let col = 0; col < 3; col++) {
+                                square.push(sudokuBoard[squareRow + row][squareCol + col]);
+                            }
+                        }
+                        const existingNumbers = square.filter(num => num !== "0");
+
+                        const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
+                        const colNumbers = sudokuBoard.map(row => row[j]).filter(num => num !== "0");
+
+                        const usedNumbers = new Set([...rowNumbers, ...colNumbers, ...usedInRow[i], ...usedInColumn[j]]);
+
+                        const missing = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+                        missingNumbers[i][j] = missing;
+                    } else {
+                        usedInRow[i].add(parseInt(sudokuBoard[i][j]));
+                        usedInColumn[j].add(parseInt(sudokuBoard[i][j]));
                     }
                 }
-                const existingNumbers = square.filter(num => num !== "0");
-
-                const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
-                const colNumbers = sudokuBoard.map(row => row[j]).filter(num => num !== "0");
-
-                const usedNumbers = new Set([...rowNumbers, ...colNumbers]);
-
-                const missing = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
-                missingNumbers[i][j] = missing;
             }
+            return missingNumbers;
         }
-    }
-    return missingNumbers;
-}
 
         function validateInput(input) {
             const value = input.value;
