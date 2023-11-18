@@ -1,36 +1,94 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Sudoku 9x9</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/sudoku.css">
+    <style>
+    </style>
 </head>
+
 <body>
-    <table border="1">
+    <div class="button-container">
+        <button class="button">Nuevo</button>
+        <button class="button">Reiniciar</button>
+        <button class="button">Comprobar</button>
+        <button class="button" onclick="resolveSudoku()">Resolver</button>
+    </div>
+    <table class="table table-bordered">
         <tbody>
-            <!-- Crea un tablero 9x9 de cuadros de texto -->
             <script>
+                const sudokuBoard = [];
                 for (let i = 0; i < 9; i++) {
                     document.write("<tr>");
                     for (let j = 0; j < 9; j++) {
-                        document.write('<td><input type="text" class="sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>');
+                        const cellId = `cell_${i}_${j}`;
+                        document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
                     }
                     document.write("</tr>");
+                    sudokuBoard.push(Array(9).fill("0"));
                 }
             </script>
         </tbody>
     </table>
 
     <script>
-        // Función para validar la entrada en los cuadros de texto
         function validateInput(input) {
             const value = input.value;
-
-            // Asegúrate de que solo se permita un dígito del 1 al 9
             if (value.length === 1 && /^[1-9]$/.test(value)) {
-                input.style.color = 'black'; // Restaura el color del texto
+                input.style.color = 'black';
+                const id = input.id;
+                const [row, col] = id.split("_").slice(1);
+                const rowIndex = parseInt(row);
+                const colIndex = parseInt(col);
+                sudokuBoard[rowIndex][colIndex] = value;
             } else {
-                input.style.color = 'red'; // Muestra el texto en rojo si la entrada es inválida
+                input.style.color = 'red';
             }
         }
+        function resolveSudoku() {
+            const Cuadrado = [];
+            for (let i = 0; i < 3; i++) {
+                Cuadrado[i] = [];
+                for (let j = 0; j < 3; j++) {
+                    Cuadrado[i][j] = '';
+                    for (let row = 0; row < 3; row++) {
+                        for (let col = 0; col < 3; col++) {
+                            Cuadrado[i][j] += sudokuBoard[i * 3 + row][j * 3 + col];
+                        }
+                    }
+                }
+            }
+
+            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            resolverWindow.document.write(
+                "<html><head><title>Sudoku Resuelto</title>" +
+                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
+                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
+            );
+            // Agrega una fila adicional al inicio y aplica el estilo CSS
+            resolverWindow.document.write("<tr style='border-bottom: 4px solid #11120f;'>");
+
+            for (let i = 0; i < 9; i++) {
+                resolverWindow.document.write("<tr>");
+                for (let j = 0; j < 9; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
+                    } else {
+                        resolverWindow.document.write(`<td>${Cuadrado[Math.floor(i / 3)][Math.floor(j / 3)].charAt((i % 3) * 3 + (j % 3))}</td>`);
+                    }
+                }
+                resolverWindow.document.write("</tr>");
+            }
+            resolverWindow.document.write("</table></body></html>");
+        }
+
+
     </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
+
 </html>
