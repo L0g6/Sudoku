@@ -62,11 +62,11 @@
             }
             resolverWindow.document.write("</table></body></html>");
         }
-
         function getMissingNumbers() {
             const missingNumbers = [];
             const usedInRow = Array(9).fill(0).map(() => new Set());
             const usedInColumn = Array(9).fill(0).map(() => new Set());
+            const usedInSquare = Array(9).fill(0).map(() => new Set());
 
             for (let i = 0; i < 9; i++) {
                 missingNumbers[i] = [];
@@ -78,6 +78,7 @@
                         for (let row = 0; row < 3; row++) {
                             for (let col = 0; col < 3; col++) {
                                 square.push(sudokuBoard[squareRow + row][squareCol + col]);
+                                usedInSquare[squareRow + row].add(parseInt(sudokuBoard[squareRow + row][squareCol + col]));
                             }
                         }
                         const existingNumbers = square.filter(num => num !== "0");
@@ -85,7 +86,7 @@
                         const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
                         const colNumbers = sudokuBoard.map(row => row[j]).filter(num => num !== "0");
 
-                        const usedNumbers = new Set([...rowNumbers, ...colNumbers, ...usedInRow[i], ...usedInColumn[j]]);
+                        const usedNumbers = new Set([...rowNumbers, ...colNumbers, ...usedInRow[i], ...usedInColumn[j], ...usedInSquare[i]]);
 
                         const missing = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
                         missingNumbers[i][j] = missing;
