@@ -71,10 +71,10 @@
                 resolverWindow.document.write("<tr>");
                 for (let j = 0; j < 4; j++) {
                     if (sudokuBoard[i][j] !== "0") {
-                        resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
+                        resolverWindow.document.write(`<td><strong>${sudokuBoard[i][j]}</strong></td>`);
                     } else {
-                        const possible = possibleNumbers[i][j].join("");
-                        resolverWindow.document.write(`<td>${possible}</td>`);
+                        const possible = possibleNumbers[i][j].join(",");
+                        resolverWindow.document.write(`<td><span style="font-size: smaller;">${possible}</span></td>`);
                     }
                 }
                 resolverWindow.document.write("</tr>");
