@@ -52,7 +52,10 @@
                     if (sudokuBoard[i][j] !== "0") {
                         resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
                     } else {
-                        resolverWindow.document.write(`<td>${missingNumbers[i][j].join("")}</td>`);
+                        const missing = missingNumbers[i][j].join("");
+                        const firstRow = missing.slice(0, 5);
+                        const secondRow = missing.slice(5);
+                        resolverWindow.document.write(`<td>${firstRow}<br>${secondRow}</td>`);
                     }
                 }
                 resolverWindow.document.write("</tr>");
@@ -83,43 +86,6 @@
             return missingNumbers;
         }
 
-        function resolveSudokuWithSquare() {
-            const Cuadrado = [];
-            for (let i = 0; i < 3; i++) {
-                Cuadrado[i] = [];
-                for (let j = 0; j < 3; j++) {
-                    Cuadrado[i][j] = '';
-                    for (let row = 0; row < 3; row++) {
-                        for (let col = 0; col < 3; col++) {
-                            Cuadrado[i][j] += sudokuBoard[i * 3 + row][j * 3 + col];
-                        }
-                    }
-                }
-            }
-
-            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
-            resolverWindow.document.write(
-                "<html><head><title>Sudoku Resuelto</title>" +
-                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
-                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
-            );
-            // Agrega una fila adicional al inicio y aplica el estilo CSS
-            resolverWindow.document.write("<tr style='border-bottom: 4px solid #11120f;'>");
-
-            for (let i = 0; i < 9; i++) {
-                resolverWindow.document.write("<tr>");
-                for (let j = 0; j < 9; j++) {
-                    if (sudokuBoard[i][j] !== "0") {
-                        resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
-                    } else {
-                        resolverWindow.document.write(`<td>${Cuadrado[Math.floor(i / 3)][Math.floor(j / 3)].charAt((i % 3) * 3 + (j % 3))}</td>`);
-                    }
-                }
-                resolverWindow.document.write("</tr>");
-            }
-            resolverWindow.document.write("</table></body></html>");
-        }
-        
         function validateInput(input) {
             const value = input.value;
             if (value.length === 1 && /^[1-9]$/.test(value)) {
