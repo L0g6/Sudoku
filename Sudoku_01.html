@@ -15,6 +15,7 @@
         <button class="button">Reiniciar</button>
         <button class="button">Comprobar</button>
         <button class="button" onclick="resolveSudoku()">Resolver</button>
+        <button class="button" onclick="countNumbers()">Contabilizar</button>
     </div>
     <table class="table table-bordered">
         <tbody>
@@ -34,7 +35,58 @@
     </table>
 
     <script>
+        function countNumbers() {
+            const numbersCount = Array(10).fill(0); // Array para contar la cantidad de cada número del 0 al 9
+
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    const number = parseInt(sudokuBoard[i][j]);
+                    if (!isNaN(number) && number >= 0 && number <= 9) {
+                        numbersCount[number]++;
+                    }
+                }
+            }
+
+            const countWindow = window.open("", "Conteo de Números", "width=400,height=400");
+            countWindow.document.write("<html><head><title>Conteo de Números</title></head><body>");
+            countWindow.document.write("<h1>Conteo de Números</h1>");
+            countWindow.document.write("<table border='1'><tr><th>Número</th><th>Cantidad</th></tr>");
+            for (let i = 1; i <= 9; i++) {
+                countWindow.document.write(`<tr><td>${i}</td><td>${numbersCount[i]}</td></tr>`);
+            }
+            countWindow.document.write("</table></body></html>");
+        }
+
         function resolveSudoku() {
+            const missingNumbers = getMissingNumbers();
+
+            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            resolverWindow.document.write(
+                "<html><head><title>Sudoku Resuelto</title>" +
+                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
+                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
+            );
+
+            for (let i = 0; i < 9; i++) {
+                resolverWindow.document.write("<tr>");
+                for (let j = 0; j < 9; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
+                    } else {
+                        const missing = missingNumbers[i][j].join("");
+                        const firstRow = missing.slice(0, 2);
+                        const secondRow = missing.slice(2);
+                        resolverWindow.document.write(`<td>${firstRow}<br>${secondRow}</td>`);
+                    }
+                }
+                resolverWindow.document.write("</tr>");
+            }
+            resolverWindow.document.write("</table></body></html>");
+        }
+
+
+
+        function resolveSudoku_0() {
             const missingNumbers = getMissingNumbers();
 
             const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
