@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Sudoku 4x4</title>
+    <title>Sudoku </title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/sudoku.css">
     <style>
@@ -20,28 +20,33 @@
     <table class="table table-bordered">
         <tbody>
             <script>
+                const l = 9; // El tamaño del cuadrado, en este caso 4x4
+                const lg = Math.sqrt(l); // Raíz cuadrada del tamaño del cuadrado
+            </script>
+            <script>
                 const sudokuBoard = [];
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < l; i++) {
                     document.write("<tr>");
-                    for (let j = 0; j < 4; j++) {
+                    for (let j = 0; j < l; j++) {
                         const cellId = `cell_${i}_${j}`;
                         document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
                     }
                     document.write("</tr>");
-                    sudokuBoard.push(Array(4).fill("0"));
+                    sudokuBoard.push(Array(l).fill("0"));
                 }
             </script>
         </tbody>
     </table>
 
     <script>
-        function countNumbers() {
-            const numbersCount = Array(5).fill(0); // Array para contar la cantidad de cada número del 0 al 4
 
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
+        function countNumbers() {
+            const numbersCount = Array(5).fill(0); // Array para contar la cantidad de cada número del 0 al l
+
+            for (let i = 0; i < l; i++) {
+                for (let j = 0; j < l; j++) {
                     const number = parseInt(sudokuBoard[i][j]);
-                    if (!isNaN(number) && number >= 0 && number <= 4) {
+                    if (!isNaN(number) && number >= 0 && number <= l) {
                         numbersCount[number]++;
                     }
                 }
@@ -51,7 +56,7 @@
             countWindow.document.write("<html><head><title>Conteo de Números</title></head><body>");
             countWindow.document.write("<h1>Conteo de Números</h1>");
             countWindow.document.write("<table border='1'><tr><th>Número</th><th>Cantidad</th></tr>");
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <=l; i++) {
                 countWindow.document.write(`<tr><td>${i}</td><td>${numbersCount[i]}</td></tr>`);
             }
             countWindow.document.write("</table></body></html>");
@@ -67,9 +72,9 @@
                 "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
             );
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i <l; i++) {
                 resolverWindow.document.write("<tr>");
-                for (let j = 0; j < 4; j++) {
+                for (let j = 0; j < l; j++) {
                     if (sudokuBoard[i][j] !== "0") {
                         resolverWindow.document.write(`<td><strong>${sudokuBoard[i][j]}</strong></td>`);
                     } else {
@@ -85,38 +90,60 @@
 
 
         function getPossibleNumbers() {
+            // Inicialización de estructuras de datos
             const possibleNumbers = [];
-            const usedInRow = Array(4).fill(0).map(() => new Set());
-            const usedInColumn = Array(4).fill(0).map(() => new Set());
-            const usedInSquare = Array(4).fill(0).map(() => new Set());
+            const usedInRow = Array(l).fill(0).map(() => new Set());
+            const usedInColumn = Array(l).fill(0).map(() => new Set());
+            const usedInSquare = Array(l).fill(0).map(() => new Set());
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < l; i++) { // i es el indice de la fila
                 possibleNumbers[i] = [];
-                for (let j = 0; j < 4; j++) {
-                    if (sudokuBoard[i][j] === "0") {
-                        const squareRow = Math.floor(i / 2) * 2;
-                        const squareCol = Math.floor(j / 2) * 2;
+                for (let j = 0; j < l; j++) { // j es el indice de la columna
+                    if (sudokuBoard[i][j] === "0") { // Si la celda está vacia se buscan posibles
+                        
+                        //  squareRow y squareCol se utilizan para identificar
+                        //  la esquina superior izquierda de un cuadrado en el sudoku 
+                        //  nxn más grande. Si consideramos que el sudoku nxn se divide
+                        //  en cuatro cuadrados más pequeños de raiz n x raiz n, squareRow y squareCol 
+                        //  representan la esquina superior izquierda de cada uno de estos
+                        //  cuadrados más pequeños.
+                        // Obtener la fila y columna de la submatriz ()
+                        const squareRow = Math.floor(i / lg) * lg;
+                        const squareCol = Math.floor(j / lg) * lg;
                         const square = [];
-                        for (let row = 0; row < 2; row++) {
-                            for (let col = 0; col < 2; col++) {
+                         // Imprimir información de fila, columna y fila y columna de la submatriz
+                        console.log(`i,j = ${i},${j}, squareRow = ${squareRow}, squareCol = ${squareCol}`);
+                        // Obtener números de la submatriz
+                        for (let row = 0; row < lg; row++) {
+                            for (let col = 0; col < lg; col++) {
                                 square.push(sudokuBoard[squareRow + row][squareCol + col]);
                                 usedInSquare[squareRow + row].add(parseInt(sudokuBoard[squareRow + row][squareCol + col]));
                             }
                         }
+
+                        // Obtener números existentes en fila y columna
                         const existingNumbers = square.filter(num => num !== "0");
 
                         const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
                         const colNumbers = sudokuBoard.map(row => row[j]).filter(num => num !== "0");
 
+                        // Crear conjunto de números utilizados
                         const usedNumbers = new Set([...rowNumbers, ...colNumbers, ...usedInRow[i], ...usedInColumn[j], ...usedInSquare[i]]);
 
-                        const possible = [1, 2, 3, 4].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+                        // Filtrar números posibles
+                        //const possible = [1,2,3,4].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+                        // Genera un rango de números del 1 al tamaño del cuadrado de lado l y filtra los números disponibles
+                        const possible = Array.from({ length: l }, (_, i) => i + 1).filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+
                         possibleNumbers[i][j] = possible;
+                    
                     } else {
                         usedInRow[i].add(parseInt(sudokuBoard[i][j]));
                         usedInColumn[j].add(parseInt(sudokuBoard[i][j]));
                     }
-                }
+                // Imprimir información de fila, columna y su contenido en la consola
+                 console.log(`i,j = ${i},${j}, content = ${sudokuBoard[i][j]}`);
+                } // acabó con la columna actual 
             }
             return possibleNumbers;
         }
