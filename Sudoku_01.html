@@ -34,20 +34,56 @@
     </table>
 
     <script>
-        function validateInput(input) {
-            const value = input.value;
-            if (value.length === 1 && /^[1-9]$/.test(value)) {
-                input.style.color = 'black';
-                const id = input.id;
-                const [row, col] = id.split("_").slice(1);
-                const rowIndex = parseInt(row);
-                const colIndex = parseInt(col);
-                sudokuBoard[rowIndex][colIndex] = value;
-            } else {
-                input.style.color = 'red';
-            }
-        }
         function resolveSudoku() {
+            const missingNumbers = getMissingNumbers();
+
+            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            resolverWindow.document.write(
+                "<html><head><title>Sudoku Resuelto</title>" +
+                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
+                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
+            );
+            // Agrega una fila adicional al inicio y aplica el estilo CSS
+            resolverWindow.document.write("<tr style='border-bottom: 4px solid #11120f;'>");
+
+            for (let i = 0; i < 9; i++) {
+                resolverWindow.document.write("<tr>");
+                for (let j = 0; j < 9; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        resolverWindow.document.write(`<td>${sudokuBoard[i][j]}</td>`);
+                    } else {
+                        resolverWindow.document.write(`<td>${missingNumbers[i][j].join("")}</td>`);
+                    }
+                }
+                resolverWindow.document.write("</tr>");
+            }
+            resolverWindow.document.write("</table></body></html>");
+        }
+
+        function getMissingNumbers() {
+            const missingNumbers = [];
+            for (let i = 0; i < 9; i++) {
+                missingNumbers[i] = [];
+                for (let j = 0; j < 9; j++) {
+                    if (sudokuBoard[i][j] === "0") {
+                        const squareRow = Math.floor(i / 3) * 3;
+                        const squareCol = Math.floor(j / 3) * 3;
+                        const square = [];
+                        for (let row = 0; row < 3; row++) {
+                            for (let col = 0; col < 3; col++) {
+                                square.push(sudokuBoard[squareRow + row][squareCol + col]);
+                            }
+                        }
+                        const existingNumbers = square.filter(num => num !== "0");
+                        const missing = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(num => !existingNumbers.includes(num.toString()));
+                        missingNumbers[i][j] = missing;
+                    }
+                }
+            }
+            return missingNumbers;
+        }
+
+        function resolveSudokuWithSquare() {
             const Cuadrado = [];
             for (let i = 0; i < 3; i++) {
                 Cuadrado[i] = [];
@@ -83,7 +119,20 @@
             }
             resolverWindow.document.write("</table></body></html>");
         }
-
+        
+        function validateInput(input) {
+            const value = input.value;
+            if (value.length === 1 && /^[1-9]$/.test(value)) {
+                input.style.color = 'black';
+                const id = input.id;
+                const [row, col] = id.split("_").slice(1);
+                const rowIndex = parseInt(row);
+                const colIndex = parseInt(col);
+                sudokuBoard[rowIndex][colIndex] = value;
+            } else {
+                input.style.color = 'red';
+            }
+        }
 
     </script>
 
