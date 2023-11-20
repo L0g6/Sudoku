@@ -119,16 +119,18 @@
 
             for (let i = 0; i < L; i++) { // i es el indice de la fila
                 possibleNumbers[i] = [];
-                for (let j = 0; j < L; j++) { // j es el indice de la columna
-                    if (sudokuBoard[i][j] === "0") { // Si la celda está vacia se buscan posibles
-
+                // j es el indice de la columna
+                for (let j = 0; j < L; j++) { 
+                    // Si la celda está vacia se buscan posibles
+                    if (sudokuBoard[i][j] === "0") { 
                         //  squareRow y squareCol se utilizan para identificar
                         //  la esquina superior izquierda de un cuadrado en el sudoku 
                         //  nxn más grande. Si consideramos que el sudoku nxn se divide
                         //  en cuatro cuadrados más pequeños de raiz n x raiz n, squareRow y squareCol 
                         //  representan la esquina superior izquierda de cada uno de estos
                         //  cuadrados más pequeños.
-                        // Obtener la fila y columna de la submatriz ()
+                        // Obtener la esquina superior izquierda de la submatriz
+
                         const squareRow = Math.floor(i / lg) * lg;
                         const squareCol = Math.floor(j / lg) * lg;
                         const square = [];
@@ -136,7 +138,18 @@
 
                         // existingNumbers se refiere a los números que están presentes 
                         // en el cuadrado pequeño (submatriz) de la celda que se está examinando
-                        const existingNumbers = square.filter(num => num !== "0");
+                        // Obtener los números de la submatriz
+                        const existingNumbers = [];
+                        for (let m = squareRow; m < squareRow + lg; m++) {
+                            for (let n = squareCol; n < squareCol + lg; n++) {
+                                if (sudokuBoard[m][n] !== "0") {
+                                    existingNumbers.push(parseInt(sudokuBoard[m][n]));
+                                }
+                            }
+                        }
+
+
+                        // const existingNumbers = square.filter(num => num !== "0");
                         // Las variables rowNumbers y colNumbers se refieren a los números existentes
                         // en la fila y columna respectivamente, en la posición actual del tablero de sudoku.
                         const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
@@ -147,8 +160,15 @@
 
                         // Filtrar dejando números posibles
                         // Genera un rango de números del 1 al tamaño del cuadrado de lado L y filtra los números disponibles
-                        const possible = Array.from({ length: L }, (_, i) => i + 1).filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
 
+                        //const possible = Array.from({ length: L }, (_, i) => i + 1).filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+                        // creamos array con los números [1..L]
+                        const numerosDel1AlL = Array.from({ length: L }, (_, i) => i + 1);
+                        //Filtro sobre numerosDel1AlL para obtener los números 
+                        //que no están en existingNumbers 
+                        const filtered1 = numerosDel1AlL.filter(num => !existingNumbers.includes(num));
+                        //y no están en usedNumbers:
+                        const possible = filtered1.filter(num => !usedNumbers.has(num));
                         possibleNumbers[i][j] = possible;
 
                     }
