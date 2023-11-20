@@ -20,8 +20,8 @@
         }
 
         /* Estilo para ampliar el borde inferior de la tercera y sexta fila */
-        table.table-bordered tr:nth-child(4),
-        table.table-bordered tr:nth-child(7) {
+        table.table-bordered tr:nth-child(5),
+        table.table-bordered tr:nth-child(8) {
             border-bottom: 4px solid #11120f;
             /* Borde inferior más ancho */
         }

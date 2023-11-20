@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sudoku </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/sudoku.css">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="button-container">
+        <button class="button">Nuevo</button>
+        <button class="button">Reiniciar</button>
+        <button class="button">Comprobar</button>
+        <button class="button" onclick="resolveSudoku()">Resolver</button>
+        <button class="button" onclick="countNumbers()">Contabilizar</button>
+        <input type="file" id="fileInput" accept=".csv">
+        <button class="button" onclick="loadSudokuFromCSV()">Cargar desde CSV</button>
+    </div>
+    <table class="table table-bordered">
+        <tbody>
+            <script>
+                const L = 9; // El tamaño del cuadrado, en este caso 4x4
+                const lg = Math.sqrt(L); // Raíz cuadrada del tamaño del cuadrado
+            </script>
+            <script>
+                const sudokuBoard = [];
+                for (let i = 0; i < L; i++) {
+                    document.write("<tr>");
+                    for (let j = 0; j < L; j++) {
+                        const cellId = `cell_${i}_${j}`;
+                        document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
+                    }
+                    document.write("</tr>");
+                    sudokuBoard.push(Array(L).fill("0"));
+                }
+            </script>
+        </tbody>
+    </table>
+
+    <script>
+
+        function countNumbers() {
+            const numbersCount = Array(L + 1).fill(0); // Array para contar la cantidad de cada número del 0 al L
+
+            for (let i = 0; i < L; i++) {
+                for (let j = 0; j < L; j++) {
+                    const number = parseInt(sudokuBoard[i][j]);
+                    if (!isNaN(number) && number >= 0 && number <= L) {
+                        numbersCount[number]++;
+                    }
+                }
+            }
+
+            const countWindow = window.open("", "Conteo de Números", "width=400,height=400");
+            countWindow.document.write("<html><head><title>Conteo de Números</title></head><body>");
+            countWindow.document.write("<h1>Conteo de Números</h1>");
+            countWindow.document.write("<table border='1'><tr><th>Número</th><th>Cantidad</th></tr>");
+            for (let i = 1; i <= L; i++) {
+                countWindow.document.write(`<tr><td>${i}</td><td>${numbersCount[i]}</td></tr>`);
+            }
+            countWindow.document.write("</table></body></html>");
+        }
+
+        function resolveSudoku() {
+            const possibleNumbers = getPossibleNumbers();
+
+            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            resolverWindow.document.write(
+                "<html><head><title>Sudoku Resuelto</title>" +
+                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
+                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
+            );
+            resolverWindow.document.write("<tr></tr><tr></tr>"); // Ajustar css
+            for (let i = 0; i < L; i++) {
+                resolverWindow.document.write("<tr>");
+                for (let j = 0; j < L; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        resolverWindow.document.write(`<td><strong>${sudokuBoard[i][j]}</strong></td>`);
+                    } else {
+                        const possible = possibleNumbers[i][j].join(",");
+                        resolverWindow.document.write(`<td><span style="font-size: smaller;">${possible}</span></td>`);
+                    }
+                }
+                resolverWindow.document.write("</tr>");
+            }
+            resolverWindow.document.write("</table></body></html>");
+        }
+
+
+
+        function getPossibleNumbers() {
+            // Inicialización de estructuras de datos
+            const possibleNumbers = [];
+            // Array(L) crea un array vacío de longitud L.
+            // fill(0) llena ese array vacío con ceros.
+            // map(() => new Set()) itera sobre cada elemento del array
+            // y crea un nuevo objeto Set() para cada elemento, 
+            // devolviendo un array de conjuntos vacíos. 
+            // Estos conjuntos se utilizarán para registrar los números 
+            //utilizados en cada fila del sudoku.
+
+            const usedInRow = Array(L).fill(0).map(() => new Set());
+            const usedInColumn = Array(L).fill(0).map(() => new Set());
+            const usedInSquare = Array(L).fill(0).map(() => new Set());
+
+            // actualiza usedInRow y usedInColumn con los números iniciales del tablero
+            for (let i = 0; i < L; i++) {
+                for (let j = 0; j < L; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        usedInRow[i].add(parseInt(sudokuBoard[i][j]));
+                        usedInColumn[j].add(parseInt(sudokuBoard[i][j]));
+                    }
+                }
+            }
+
+
+            for (let i = 0; i < L; i++) { // i es el indice de la fila
+                possibleNumbers[i] = [];
+                // j es el indice de la columna
+                for (let j = 0; j < L; j++) { 
+                    // Si la celda está vacia se buscan posibles
+                    if (sudokuBoard[i][j] === "0") { 
+                        //  squareRow y squareCol se utilizan para identificar
+                        //  la esquina superior izquierda de un cuadrado en el sudoku 
+                        //  nxn más grande. Si consideramos que el sudoku nxn se divide
+                        //  en cuatro cuadrados más pequeños de raiz n x raiz n, squareRow y squareCol 
+                        //  representan la esquina superior izquierda de cada uno de estos
+                        //  cuadrados más pequeños.
+                        // Obtener la esquina superior izquierda de la submatriz
+
+                        const squareRow = Math.floor(i / lg) * lg;
+                        const squareCol = Math.floor(j / lg) * lg;
+                        const square = [];
+                        // Obtener números de la submatriz
+
+                        // existingNumbers se refiere a los números que están presentes 
+                        // en el cuadrado pequeño (submatriz) de la celda que se está examinando
+                        // Obtener los números de la submatriz
+                        const existingNumbers = [];
+                        for (let m = squareRow; m < squareRow + lg; m++) {
+                            for (let n = squareCol; n < squareCol + lg; n++) {
+                                if (sudokuBoard[m][n] !== "0") {
+                                    existingNumbers.push(parseInt(sudokuBoard[m][n]));
+                                }
+                            }
+                        }
+
+
+                        // const existingNumbers = square.filter(num => num !== "0");
+                        // Las variables rowNumbers y colNumbers se refieren a los números existentes
+                        // en la fila y columna respectivamente, en la posición actual del tablero de sudoku.
+                        const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
+                        const colNumbers = sudokuBoard.map(row => row[j]).filter(num => num !== "0");
+
+                        // Crear conjunto de números utilizados
+                        const usedNumbers = new Set([...rowNumbers, ...colNumbers, ...usedInRow[i], ...usedInColumn[j], ...usedInSquare[i]]);
+
+                        // Filtrar dejando números posibles
+                        // Genera un rango de números del 1 al tamaño del cuadrado de lado L y filtra los números disponibles
+
+                        //const possible = Array.from({ length: L }, (_, i) => i + 1).filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+                        // creamos array con los números [1..L]
+                        const numerosDel1AlL = Array.from({ length: L }, (_, i) => i + 1);
+                        //Filtro sobre numerosDel1AlL para obtener los números 
+                        //que no están en existingNumbers 
+                        const filtered1 = numerosDel1AlL.filter(num => !existingNumbers.includes(num));
+                        //y no están en usedNumbers:
+                        const possible = filtered1.filter(num => !usedNumbers.has(num));
+                        possibleNumbers[i][j] = possible;
+
+                    }
+                } // acabó con la columna actual 
+
+            }
+            return possibleNumbers;
+        }
+
+        function validateInput(input) {
+            const value = input.value;
+            if (value.length === 1 && /^[1-L]$/.test(value)) {
+                input.style.color = 'black';
+                const id = input.id;
+                const [row, col] = id.split("_").slice(1);
+                const rowIndex = parseInt(row);
+                const colIndex = parseInt(col);
+                sudokuBoard[rowIndex][colIndex] = value;
+            } else {
+                input.style.color = 'red';
+            }
+        }
+        function loadSudokuFromCSV() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const contents = e.target.result;
+                    const lines = contents.split('\n');
+
+                    // Actualizar el tablero con los datos del CSV
+                    for (let i = 0; i < lines.length; i++) {
+                        const values = lines[i].trim().split(',');
+                        for (let j = 0; j < values.length; j++) {
+                            const cellId = `cell_${i}_${j}`;
+                            const cell = document.getElementById(cellId);
+                            if (cell && values[j] !== '0') {
+                                cell.value = values[j];
+                                sudokuBoard[i][j] = values[j];
+                            }
+                        }
+                    }
+                };
+
+                reader.readAsText(file);
+            } else {
+                console.error('No se ha seleccionado ningún archivo.');
+            }
+        }
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
