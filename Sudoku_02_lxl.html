@@ -41,12 +41,12 @@
     <script>
 
         function countNumbers() {
-            const numbersCount = Array(5).fill(0); // Array para contar la cantidad de cada número del 0 al l
+            const numbersCount = Array(L + 1).fill(0); // Array para contar la cantidad de cada número del 0 al L
 
             for (let i = 0; i < L; i++) {
                 for (let j = 0; j < L; j++) {
                     const number = parseInt(sudokuBoard[i][j]);
-                    if (!isNaN(number) && number >= 0 && number <= l) {
+                    if (!isNaN(number) && number >= 0 && number <= L) {
                         numbersCount[number]++;
                     }
                 }
@@ -130,33 +130,7 @@
                         const squareRow = Math.floor(i / lg) * lg;
                         const squareCol = Math.floor(j / lg) * lg;
                         const square = [];
-                        // Imprimir información de fila, columna y fila y columna de la submatriz
-                        // console.log(`i,j = ${i},${j}, squareRow = ${squareRow}, squareCol = ${squareCol}`);
                         // Obtener números de la submatriz
-                        for (let row = 0; row < lg; row++) { // nos da el lado del cuadrado de la submatriz
-                            for (let col = 0; col < lg; col++) { // procesar cada columna de la submatriz
-                                //añade un nuevo número a square
-                                square.push(sudokuBoard[squareRow + row][squareCol + col]);
-                                // busca valor en celda de submatriz para añadir
-                                const valueToAdd = parseInt(sudokuBoard[squareRow + row][squareCol + col]);
-                                usedInSquare[squareRow + row].add(valueToAdd);
-                                if (squareRow === 0 && squareCol === 0) {
-                                    console.log(`i,j = ${i},${j}, row = ${row} ,col = ${col},square = ${square}, valueToAdd = ${valueToAdd}`);
-                                    for (let i = 0; i < usedInSquare.length; i++) {
-                                        const conjunto = usedInSquare[i];
-                                        if (conjunto.size > 0) {
-                                            console.log(`Conjunto ${i}:`);
-                                            const conjunto = usedInSquare[i];
-                                            for (let elemento of conjunto) {
-                                                console.log(elemento);
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-
 
                         // existingNumbers se refiere a los números que están presentes 
                         // en el cuadrado pequeño (submatriz) de la celda que se está examinando
@@ -169,34 +143,15 @@
                         // Crear conjunto de números utilizados
                         const usedNumbers = new Set([...rowNumbers, ...colNumbers, ...usedInRow[i], ...usedInColumn[j], ...usedInSquare[i]]);
 
-                        // Filtrar números posibles
-                        //const possible = [1,2,3,4].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
+                        // Filtrar dejando números posibles
                         // Genera un rango de números del 1 al tamaño del cuadrado de lado L y filtra los números disponibles
                         const possible = Array.from({ length: L }, (_, i) => i + 1).filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
 
                         possibleNumbers[i][j] = possible;
 
-                    } 
-
-                    //}
-                    // Imprimir información de fila, columna y su contenido en la consola
-                    // console.log(`i,j = ${i},${j}, content = ${sudokuBoard[i][j]}`);
+                    }
                 } // acabó con la columna actual 
-                // Mostrar elementos no vacíos en usedInRow
-                console.log("Elementos no vacíos en usedInRow:");
-                usedInRow.forEach((set, index) => {
-                    if (set.size > 0) {
-                        console.log(`Fila ${index}:`, Array.from(set).join(", "));
-                    }
-                });
 
-                // Mostrar elementos no vacíos en usedInColumn
-                console.log("\nElementos no vacíos en usedInColumn:");
-                usedInColumn.forEach((set, index) => {
-                    if (set.size > 0) {
-                        console.log(`Columna ${index}:`, Array.from(set).join(", "));
-                    }
-                });
             }
             return possibleNumbers;
         }
