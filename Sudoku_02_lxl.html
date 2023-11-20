@@ -92,7 +92,7 @@
         function getPossibleNumbers() {
             // Inicialización de estructuras de datos
             const possibleNumbers = [];
-            // Array(L) crea un array vacío de longitud l.
+            // Array(L) crea un array vacío de longitud L.
             // fill(0) llena ese array vacío con ceros.
             // map(() => new Set()) itera sobre cada elemento del array
             // y crea un nuevo objeto Set() para cada elemento, 
@@ -103,6 +103,17 @@
             const usedInRow = Array(L).fill(0).map(() => new Set());
             const usedInColumn = Array(L).fill(0).map(() => new Set());
             const usedInSquare = Array(L).fill(0).map(() => new Set());
+
+            // actualiza usedInRow y usedInColumn con los números iniciales del tablero
+            for (let i = 0; i < L; i++) {
+                for (let j = 0; j < L; j++) {
+                    if (sudokuBoard[i][j] !== "0") {
+                        usedInRow[i].add(parseInt(sudokuBoard[i][j]));
+                        usedInColumn[j].add(parseInt(sudokuBoard[i][j]));
+                    }
+                }
+            }
+
 
             for (let i = 0; i < L; i++) { // i es el indice de la fila
                 possibleNumbers[i] = [];
@@ -146,9 +157,12 @@
                             }
                         }
 
-                        // Obtener números existentes en fila y columna
-                        const existingNumbers = square.filter(num => num !== "0");
 
+                        // existingNumbers se refiere a los números que están presentes 
+                        // en el cuadrado pequeño (submatriz) de la celda que se está examinando
+                        const existingNumbers = square.filter(num => num !== "0");
+                        // Las variables rowNumbers y colNumbers se refieren a los números existentes
+                        // en la fila y columna respectivamente, en la posición actual del tablero de sudoku.
                         const rowNumbers = sudokuBoard[i].filter(num => num !== "0");
                         const colNumbers = sudokuBoard.map(row => row[j]).filter(num => num !== "0");
 
@@ -157,34 +171,32 @@
 
                         // Filtrar números posibles
                         //const possible = [1,2,3,4].filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
-                        // Genera un rango de números del 1 al tamaño del cuadrado de lado l y filtra los números disponibles
+                        // Genera un rango de números del 1 al tamaño del cuadrado de lado L y filtra los números disponibles
                         const possible = Array.from({ length: L }, (_, i) => i + 1).filter(num => !existingNumbers.includes(num.toString()) && !usedNumbers.has(num));
 
                         possibleNumbers[i][j] = possible;
 
-                    } else {
-                        usedInRow[i].add(parseInt(sudokuBoard[i][j]));
-                        usedInColumn[j].add(parseInt(sudokuBoard[i][j]));
-                        // Mostrar elementos no vacíos en usedInRow
-                        console.log("Elementos no vacíos en usedInRow:");
-                        usedInRow.forEach((set, index) => {
-                            if (set.size > 0) {
-                                console.log(`Fila ${index}:`, Array.from(set).join(", "));
-                            }
-                        });
+                    } 
 
-                        // Mostrar elementos no vacíos en usedInColumn
-                        console.log("\nElementos no vacíos en usedInColumn:");
-                        usedInColumn.forEach((set, index) => {
-                            if (set.size > 0) {
-                                console.log(`Columna ${index}:`, Array.from(set).join(", "));
-                            }
-                        });
-
-                    }
+                    //}
                     // Imprimir información de fila, columna y su contenido en la consola
                     // console.log(`i,j = ${i},${j}, content = ${sudokuBoard[i][j]}`);
                 } // acabó con la columna actual 
+                // Mostrar elementos no vacíos en usedInRow
+                console.log("Elementos no vacíos en usedInRow:");
+                usedInRow.forEach((set, index) => {
+                    if (set.size > 0) {
+                        console.log(`Fila ${index}:`, Array.from(set).join(", "));
+                    }
+                });
+
+                // Mostrar elementos no vacíos en usedInColumn
+                console.log("\nElementos no vacíos en usedInColumn:");
+                usedInColumn.forEach((set, index) => {
+                    if (set.size > 0) {
+                        console.log(`Columna ${index}:`, Array.from(set).join(", "));
+                    }
+                });
             }
             return possibleNumbers;
         }
