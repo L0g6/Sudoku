@@ -3,7 +3,9 @@
 
 <head>
     <title>Sudoku </title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="/bootstrap_4_0/css/bootstrap.min.css">
+
     <link rel="stylesheet" type="text/css" href="css/sudoku.css">
     <style>
     </style>
@@ -22,13 +24,17 @@
     <table class="table table-bordered">
         <tbody>
             <script>
-                const L = 9; // El tamaño del cuadrado, en este caso 4x4
+                const L = 4; // El tamaño del cuadrado, en este caso 4x4
                 const lg = Math.sqrt(L); // Raíz cuadrada del tamaño del cuadrado
             </script>
             <script>
                 const sudokuBoard = [];
-                for (let i = 0; i < L; i++) {
-                    document.write("<tr>");
+                for (let i = 1; i <= L; i++) {
+                    let specialRowClass = "";
+                    if (i === lg || i === (lg*2)) {
+                        specialRowClass = "special-row"; // Agregar clase especial para la fila 3 y 6 cuando L es 9
+                    }
+                    document.write(`<tr class="${specialRowClass}">`);
                     for (let j = 0; j < L; j++) {
                         const cellId = `cell_${i}_${j}`;
                         document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
@@ -70,7 +76,8 @@
             const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
             resolverWindow.document.write(
                 "<html><head><title>Sudoku Resuelto</title>" +
-                "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'>" +
+
+                "<link rel='stylesheet' href=href='/bootstrap_4_0/css/bootstrap.min.css'>" +
                 "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
             );
             resolverWindow.document.write("<tr></tr><tr></tr>"); // Ajustar css
@@ -120,9 +127,9 @@
             for (let i = 0; i < L; i++) { // i es el indice de la fila
                 possibleNumbers[i] = [];
                 // j es el indice de la columna
-                for (let j = 0; j < L; j++) { 
+                for (let j = 0; j < L; j++) {
                     // Si la celda está vacia se buscan posibles
-                    if (sudokuBoard[i][j] === "0") { 
+                    if (sudokuBoard[i][j] === "0") {
                         //  squareRow y squareCol se utilizan para identificar
                         //  la esquina superior izquierda de un cuadrado en el sudoku 
                         //  nxn más grande. Si consideramos que el sudoku nxn se divide
@@ -224,8 +231,8 @@
 
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.7.1.slim.min.js"></script>
+    <script src="bootstrap_4_0/js/bootstrap.min.js"></script>
 </body>
 
 </html>

@@ -19,13 +19,6 @@
             /* Borde derecho más ancho */
         }
 
-        /* Estilo para ampliar el borde inferior de la tercera y sexta fila */
-        table.table-bordered tr:nth-child(5),
-        table.table-bordered tr:nth-child(8) {
-            border-bottom: 4px solid #11120f;
-            /* Borde inferior más ancho */
-        }
-
         /* Estilo para los botones */
         .button-container {
             display: flex;
@@ -45,3 +38,8 @@
         .button:hover {
             border-color: #2980b9;
         }
+/* Estilo para ampliar el borde inferior de filas especiales */
+table.table-bordered tr.special-row {
+    border-bottom: 4px solid #11120f;
+    /* Borde inferior más ancho */
+}
