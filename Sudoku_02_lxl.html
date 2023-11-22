@@ -16,7 +16,7 @@
         <button class="button">Nuevo</button>
         <button class="button">Reiniciar</button>
         <button class="button">Comprobar</button>
-        <button class="button" onclick="resolveSudoku()">Resolver</button>
+        <button class="button" onclick="posibleSudoku()">Posibles</button>
         <button class="button" onclick="countNumbers()">Contabilizar</button>
         <input type="file" id="fileInput" accept=".csv">
         <button class="button" onclick="loadSudokuFromCSV()">Cargar desde CSV</button>
@@ -70,11 +70,11 @@
             countWindow.document.write("</table></body></html>");
         }
 
-        function resolveSudoku() {
+        function posibleSudoku() {
             const possibleNumbers = getPossibleNumbers();
 
-            const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
-            resolverWindow.document.write(
+            const posiblerWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            posiblerWindow.document.write(
                 `<html><head><title>Números posibles en Sudoku</title>
                 <link rel='stylesheet' href='bootstrap_4_0/css/bootstrap.min.css'>
                 <link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body>
@@ -86,19 +86,22 @@
                 if ((i + 1) === lg || (i + 1) === (lg * 2)) {
                     specialRowClass = "special-row"; // Agregar clase especial para la fila 3 y 6 cuando L es 9
                 }
-                resolverWindow.document.write(`<tr class="${specialRowClass}">`);
+                posiblerWindow.document.write(`<tr class="${specialRowClass}">`);
 
                 for (let j = 0; j < L; j++) {
+                    // Si la casilla está resuelta
                     if (sudokuBoard[i][j] !== "0") {
-                        resolverWindow.document.write(`<td><strong>${sudokuBoard[i][j]}</strong></td>`);
+                        posiblerWindow.document.write(`<td class="sudoku-definido"><span>${sudokuBoard[i][j]}</span></td>`);
+                        // Si no está resuelta 
                     } else {
                         const possible = possibleNumbers[i][j].join(",");
-                        resolverWindow.document.write(`<td><span style="font-size: smaller;">${possible}</span></td>`);
+                        posiblerWindow.document.write(`<td class="sudoku-possibles"><span>${possible}</span></td>`);
                     }
                 }
-                resolverWindow.document.write("</tr>");
+
+                posiblerWindow.document.write("</tr>");
             }
-            resolverWindow.document.write("</table></body></html>");
+            posiblerWindow.document.write("</table></body></html>");
         }
 
 
