@@ -31,7 +31,7 @@
                 const sudokuBoard = [];
                 for (let i = 0; i < L; i++) {
                     let specialRowClass = "";
-                    if ((i+1) === lg || (i+1) === (lg * 2)) {
+                    if ((i + 1) === lg || (i + 1) === (lg * 2)) {
                         specialRowClass = "special-row"; // Agregar clase especial para la fila 3 y 6 cuando L es 9
                     }
                     document.write(`<tr class="${specialRowClass}">`);
@@ -75,14 +75,19 @@
 
             const resolverWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
             resolverWindow.document.write(
-                "<html><head><title>Sudoku Resuelto</title>" +
-
-                "<link rel='stylesheet' href='bootstrap_4_0/css/bootstrap.min.css'>" +
-                "<link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body><table class='table table-bordered'>"
+                `<html><head><title>Números posibles en Sudoku</title>
+                <link rel='stylesheet' href='bootstrap_4_0/css/bootstrap.min.css'>
+                <link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body>
+                <table class='table table-bordered'>`
             );
-            // resolverWindow.document.write("<tr></tr><tr></tr>"); // Ajustar css
+
             for (let i = 0; i < L; i++) {
-                resolverWindow.document.write("<tr>");
+                let specialRowClass = "";
+                if ((i + 1) === lg || (i + 1) === (lg * 2)) {
+                    specialRowClass = "special-row"; // Agregar clase especial para la fila 3 y 6 cuando L es 9
+                }
+                resolverWindow.document.write(`<tr class="${specialRowClass}">`);
+
                 for (let j = 0; j < L; j++) {
                     if (sudokuBoard[i][j] !== "0") {
                         resolverWindow.document.write(`<td><strong>${sudokuBoard[i][j]}</strong></td>`);
