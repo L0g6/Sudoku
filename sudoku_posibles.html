@@ -20,6 +20,8 @@
         <button class="button" onclick="countNumbers()">Contabilizar</button>
         <input type="file" id="fileInput" accept=".csv">
         <button class="button" onclick="loadSudokuFromCSV()">Cargar desde CSV</button>
+        <button class="button" onclick="guardarSudoku(sudokuBoard)">Guardar</button> <!-- Nuevo botón para guardar -->
+
     </div>
     <table class="table table-bordered">
         <tbody>
@@ -47,6 +49,29 @@
     </table>
 
     <script>
+
+        function guardarSudoku(sudokuBoard) {
+            let csvContent = '';
+
+            for (let i = 0; i < sudokuBoard.length; i++) {
+                let row = sudokuBoard[i];
+                for (let j = 0; j < row.length; j++) {
+                    let value = row[j].trim() === '' ? '0' : row[j].trim();
+                    csvContent += value + (j === row.length - 1 ? '\n' : ',');
+                }
+            }
+
+            // Generar el nombre del archivo con fecha y hora actual
+            const currentDate = new Date();
+            const timestamp = `${currentDate.getFullYear()}${('0' + (currentDate.getMonth() + 1)).slice(-2)}${('0' + currentDate.getDate()).slice(-2)}${('0' + currentDate.getHours()).slice(-2)}${('0' + currentDate.getMinutes()).slice(-2)}`;
+            const fileName = `sudoku_save_${timestamp}.csv`;
+
+            // Crear y descargar el archivo CSV
+            let downloadLink = document.createElement('a');
+            downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
+            downloadLink.download = fileName;
+            downloadLink.click();
+        }
 
         function countNumbers() {
             const numbersCount = Array(L + 1).fill(0); // Array para contar la cantidad de cada número del 0 al L
