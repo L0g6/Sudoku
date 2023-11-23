@@ -11,11 +11,12 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Ficheros
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -35,7 +36,7 @@
             </ul>
         </div>
     </nav>
-    <input type="file" id="fileInput" accept=".csv" >
+    <input type="file" id="fileInput" accept=".csv" style="display: none;">
 
     <table class="table table-bordered">
         <tbody>
@@ -247,34 +248,38 @@
         }
         function loadSudokuFromCSV() {
             const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+            fileInput.click(); // Abre el selector de archivos
 
-            if (file) {
-                const reader = new FileReader();
+            fileInput.onchange = function () {
+                const file = fileInput.files[0];
 
-                reader.onload = function (e) {
-                    const contents = e.target.result;
-                    const lines = contents.split('\n');
+                if (file) {
+                    const reader = new FileReader();
 
-                    // Actualizar el tablero con los datos del CSV
-                    //add.html
-                    for (let i = 0; i < lines.length; i++) {
-                        const values = lines[i].trim().split(',');
-                        for (let j = 0; j < values.length; j++) {
-                            const cellId = `cell_${i}_${j}`;
-                            const cell = document.getElementById(cellId);
-                            if (cell && values[j] !== '0') {
-                                cell.value = values[j];
-                                sudokuBoard[i][j] = values[j];
+                    reader.onload = function (e) {
+                        const contents = e.target.result;
+                        const lines = contents.split('\n');
+
+                        // Actualizar el tablero con los datos del CSV
+
+                        for (let i = 0; i < lines.length; i++) {
+                            const values = lines[i].trim().split(',');
+                            for (let j = 0; j < values.length; j++) {
+                                const cellId = `cell_${i}_${j}`;
+                                const cell = document.getElementById(cellId);
+                                if (cell && values[j] !== '0') {
+                                    cell.value = values[j];
+                                    sudokuBoard[i][j] = values[j];
+                                }
                             }
                         }
-                    }
-                };
+                    };
 
-                reader.readAsText(file);
-            } else {
-                console.error('Seleccionar archivo');
-            }
+                    reader.readAsText(file);
+                } else {
+                    console.error('No se ha seleccionado ningún archivo.');
+                }
+            };
         }
 
     </script>

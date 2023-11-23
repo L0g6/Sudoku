@@ -1,5 +1,5 @@
         /* Personaliza el tamaño de los cuadros de texto */
-        
+
         .sudoku-cell {
             width: 40px;
             height: 40px;
@@ -11,12 +11,12 @@
             text-align: center;
             font-size: smaller;
         }
-        
+
         .sudoku-definido {
             text-align: center;
             font-weight: bold;
             font-size: large;
-        }        
+        }
 
         /* Estilo para centrar horizontal y verticalmente los cuadros de texto */
         table.table-bordered td {
@@ -50,8 +50,36 @@
         .button:hover {
             border-color: #2980b9;
         }
-/* Estilo para ampliar el borde inferior de filas especiales */
-table.table-bordered tr.special-row {
-    border-bottom: 4px solid #11120f;
-    /* Borde inferior más ancho */
-}
+
+        /* Estilo para ampliar el borde inferior de filas especiales */
+        table.table-bordered tr.special-row {
+            border-bottom: 4px solid #11120f;
+            /* Borde inferior más ancho */
+        }
+
+        /* Estilos adicionales menú */
+        .dropdown-menu {
+            background-color: #3498db;
+            /* Fondo azul */
+        }
+
+        .dropdown-item {
+            color: #ffffff;
+            /* Texto blanco */
+        }
+
+        .dropdown-item:hover {
+            background-color: #2980b9;
+            /* Color de fondo al pasar el ratón */
+        }
+
+        /* Estilos para los nav-link */
+        .nav-link {
+            color: #3498db;
+            /* Color de texto para los elementos nav-link */
+        }
+
+        .nav-link:hover {
+            color: #2980b9;
+            /* Color de texto al pasar el ratón sobre los elementos nav-link */
+        }
