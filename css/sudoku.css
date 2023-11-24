@@ -73,13 +73,6 @@
             /* Color de fondo al pasar el ratón */
         }
 
-        /* Estilos para los nav-link */
-        .nav-link {
-            color: #3498db;
-            /* Color de texto para los elementos nav-link */
-        }
-
-        .nav-link:hover {
-            color: #2980b9;
-            /* Color de texto al pasar el ratón sobre los elementos nav-link */
+        .navbar {
+            background: #FF7A59;
         }
