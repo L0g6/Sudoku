@@ -3,7 +3,6 @@
 
 <head>
     <title>Sudoku </title>
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="bootstrap_4_0/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="css/sudoku.css">
@@ -12,15 +11,38 @@
 </head>
 
 <body>
-    <div class="button-container">
-        <button class="button">Nuevo</button>
-        <button class="button">Reiniciar</button>
-        <button class="button">Comprobar</button>
-        <button class="button" onclick="posibleSudoku()">Posibles</button>
-        <button class="button" onclick="countNumbers()">Contabilizar</button>
-        <input type="file" id="fileInput" accept=".csv">
-        <button class="button" onclick="loadSudokuFromCSV()">Cargar desde CSV</button>
-    </div>
+    <nav class="navbar navbar-expand-sm navbar-dark">
+    <a class="navbar-brand" href="#">Sudoku</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Ficheros
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" onclick="loadSudokuFromCSV()">Cargar CSV</a>
+                        <a class="dropdown-item" href="#" onclick="guardarSudoku(sudokuBoard)">Guardar CSV</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" onclick="posibleSudoku()">Posibles</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="#" onclick="countNumbers()">Contabilizar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Otros</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <input type="file" id="fileInput" accept=".csv" style="display: none;">
+
     <table class="table table-bordered">
         <tbody>
             <script>
@@ -47,6 +69,29 @@
     </table>
 
     <script>
+
+        function guardarSudoku(sudokuBoard) {
+            let csvContent = '';
+
+            for (let i = 0; i < sudokuBoard.length; i++) {
+                let row = sudokuBoard[i];
+                for (let j = 0; j < row.length; j++) {
+                    let value = row[j].trim() === '' ? '0' : row[j].trim();
+                    csvContent += value + (j === row.length - 1 ? '\n' : ',');
+                }
+            }
+
+            // Generar el nombre del archivo con fecha y hora actual
+            const currentDate = new Date();
+            const timestamp = `${currentDate.getFullYear()}${('0' + (currentDate.getMonth() + 1)).slice(-2)}${('0' + currentDate.getDate()).slice(-2)}${('0' + currentDate.getHours()).slice(-2)}${('0' + currentDate.getMinutes()).slice(-2)}`;
+            const fileName = `sudoku_save_${timestamp}.csv`;
+
+            // Crear y descargar el archivo CSV
+            let downloadLink = document.createElement('a');
+            downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
+            downloadLink.download = fileName;
+            downloadLink.click();
+        }
 
         function countNumbers() {
             const numbersCount = Array(L + 1).fill(0); // Array para contar la cantidad de cada número del 0 al L
@@ -208,34 +253,38 @@
         }
         function loadSudokuFromCSV() {
             const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
+            fileInput.click(); // Abre el selector de archivos
 
-            if (file) {
-                const reader = new FileReader();
+            fileInput.onchange = function () {
+                const file = fileInput.files[0];
 
-                reader.onload = function (e) {
-                    const contents = e.target.result;
-                    const lines = contents.split('\n');
+                if (file) {
+                    const reader = new FileReader();
 
-                    // Actualizar el tablero con los datos del CSV
-                    //add.html
-                    for (let i = 0; i < lines.length; i++) {
-                        const values = lines[i].trim().split(',');
-                        for (let j = 0; j < values.length; j++) {
-                            const cellId = `cell_${i}_${j}`;
-                            const cell = document.getElementById(cellId);
-                            if (cell && values[j] !== '0') {
-                                cell.value = values[j];
-                                sudokuBoard[i][j] = values[j];
+                    reader.onload = function (e) {
+                        const contents = e.target.result;
+                        const lines = contents.split('\n');
+
+                        // Actualizar el tablero con los datos del CSV
+
+                        for (let i = 0; i < lines.length; i++) {
+                            const values = lines[i].trim().split(',');
+                            for (let j = 0; j < values.length; j++) {
+                                const cellId = `cell_${i}_${j}`;
+                                const cell = document.getElementById(cellId);
+                                if (cell && values[j] !== '0') {
+                                    cell.value = values[j];
+                                    sudokuBoard[i][j] = values[j];
+                                }
                             }
                         }
-                    }
-                };
+                    };
 
-                reader.readAsText(file);
-            } else {
-                console.error('No se ha seleccionado ningún archivo.');
-            }
+                    reader.readAsText(file);
+                } else {
+                    console.error('No se ha seleccionado ningún archivo.');
+                }
+            };
         }
 
     </script>
