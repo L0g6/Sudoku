@@ -46,37 +46,40 @@
     <!-- Oculta el input de tipo file para personalizar su apariencia -->
     <input type="file" id="fileInput" accept=".csv" style="display: none;">
 
-    <table class="table table-bordered">
-        <tbody>
-            <script>
-                const L = 9; // El tamaño del cuadrado, en este caso 4x4
-                const lg = Math.sqrt(L); // Raíz cuadrada del tamaño del cuadrado
-            </script>
-            <script>
-                const sudokuBoard = [];
-                for (let i = 0; i < L; i++) {
-                    let specialRowClass = "";
-                    if ((i + 1) === lg || (i + 1) === (lg * 2)) {
-                        specialRowClass = "special-row"; // Agregar clase especial para la fila 3 y 6 cuando L es 9
-                    }
-                    document.write(`<tr class="${specialRowClass}">`);
-                    for (let j = 0; j < L; j++) {
-                        const cellId = `cell_${i}_${j}`;
-                        document.write(`
+    <script>
+        const L = 9; // El tamaño del cuadrado, en este caso 4x4
+        const lg = Math.sqrt(L); // Raíz cuadrada del tamaño del cuadrado
+        function generateSudokuTable(L) {
+            const sudokuBoard = [];
+            const lg = Math.sqrt(L); // Raíz cuadrada del tamaño del cuadrado
+
+            let tableHTML = '';
+
+            for (let i = 0; i < L; i++) {
+                let specialRowClass = "";
+                if ((i + 1) === lg || (i + 1) === (lg * 2)) {
+                    specialRowClass = "special-row"; // Agregar clase especial para la fila 3 y 6 cuando L es 9
+                }
+                tableHTML += `<tr class="${specialRowClass}">`;
+                for (let j = 0; j < L; j++) {
+                    const cellId = `cell_${i}_${j}`;
+                    tableHTML += `
                 <td>
                     <label for="${cellId}" style="display: none;">Celda ${i}-${j}:</label>
                     <input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)">
                 </td>
-            `);
-                    }
-                    document.write("</tr>");
-                    sudokuBoard.push(Array(L).fill("0"));
+            `;
                 }
-            </script>
-        </tbody>
-    </table>
+                tableHTML += "</tr>";
+                sudokuBoard.push(Array(L).fill("0"));
+            }
 
-    <script>
+            document.write(`<table class="table table-bordered">${tableHTML}</table>`);
+
+            return sudokuBoard;
+        }
+
+        
 
         function guardarSudoku(sudokuBoard) {
             let csvContent = '';
@@ -308,7 +311,7 @@ height: ${600 / L}px; /* Establece la altura igual al ancho para formar un cuadr
                 }
             };
         }
-
+    const sudokuBoard = generateSudokuTable(L); // Se crea la tabla en pantalla y el array de sudoku
     </script>
 
     <script src="js/jquery-3.7.1.slim.min.js"></script>
