@@ -60,7 +60,12 @@
                     document.write(`<tr class="${specialRowClass}">`);
                     for (let j = 0; j < L; j++) {
                         const cellId = `cell_${i}_${j}`;
-                        document.write(`<td><input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)"></td>`);
+                        document.write(`
+                <td>
+                    <label for="${cellId}" style="display: none;">Celda ${i}-${j}:</label>
+                    <input type="text" id="${cellId}" class="form-control sudoku-cell" maxlength="1" oninput="validateInput(this)">
+                </td>
+            `);
                     }
                     document.write("</tr>");
                     sudokuBoard.push(Array(L).fill("0"));
