@@ -240,7 +240,13 @@
 
         function validateInput(input) {
             const value = input.value;
-            if (value.length === 1 && /^[1-L]$/.test(value)) {
+            if (value === '') { // Si el valor es vacío, borra el número
+        const id = input.id;
+        const [row, col] = id.split("_").slice(1);
+        const rowIndex = parseInt(row);
+        const colIndex = parseInt(col);
+        sudokuBoard[rowIndex][colIndex] = '0'; // Establece la celda como vacía en el tablero
+    } else if (value.length === 1 && /^[1-L]$/.test(value)) {
                 input.style.color = 'black';
                 const id = input.id;
                 const [row, col] = id.split("_").slice(1);
