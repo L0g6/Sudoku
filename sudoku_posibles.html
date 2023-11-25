@@ -12,10 +12,11 @@
 
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark">
-    <a class="navbar-brand" href="#">Sudoku</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+        <a class="navbar-brand" href="#">Sudoku</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
@@ -118,11 +119,18 @@
         function posibleSudoku() {
             const possibleNumbers = getPossibleNumbers();
 
-            const posiblerWindow = window.open("", "Sudoku Resolver", "width=600,height=600");
+            const posiblerWindow = window.open("", "Sudoku Posibles", "width=600,height=600");
             posiblerWindow.document.write(
                 `<html><head><title>Números posibles en Sudoku</title>
                 <link rel='stylesheet' href='bootstrap_4_0/css/bootstrap.min.css'>
-                <link rel='stylesheet' type='text/css' href='css/sudoku.css'></head><body>
+                <link rel='stylesheet' type='text/css' href='css/sudoku.css'>
+        <style>
+            .sudoku-cell {
+                width: ${600 / L}px; /* Calcula el ancho de la celda en base al tamaño del Sudoku */
+                text-align: center; /* Centra el texto en la celda */
+            }
+        </style>
+        </head><body>
                 <table class='table table-bordered'>`
             );
 
@@ -136,11 +144,11 @@
                 for (let j = 0; j < L; j++) {
                     // Si la casilla está resuelta
                     if (sudokuBoard[i][j] !== "0") {
-                        posiblerWindow.document.write(`<td class="sudoku-definido"><span>${sudokuBoard[i][j]}</span></td>`);
+                        posiblerWindow.document.write(`<td class="sudoku-definido sudoku-cell"><span>${sudokuBoard[i][j]}</span></td>`);
                         // Si no está resuelta 
                     } else {
                         const possible = possibleNumbers[i][j].join(",");
-                        posiblerWindow.document.write(`<td class="sudoku-possibles"><span>${possible}</span></td>`);
+                        posiblerWindow.document.write(`<td class="sudoku-possibles sudoku-cell"><span>${possible}</span></td>`);
                     }
                 }
 
@@ -241,12 +249,12 @@
         function validateInput(input) {
             const value = input.value;
             if (value === '') { // Si el valor es vacío, borra el número
-        const id = input.id;
-        const [row, col] = id.split("_").slice(1);
-        const rowIndex = parseInt(row);
-        const colIndex = parseInt(col);
-        sudokuBoard[rowIndex][colIndex] = '0'; // Establece la celda como vacía en el tablero
-    } else if (value.length === 1 && /^[1-L]$/.test(value)) {
+                const id = input.id;
+                const [row, col] = id.split("_").slice(1);
+                const rowIndex = parseInt(row);
+                const colIndex = parseInt(col);
+                sudokuBoard[rowIndex][colIndex] = '0'; // Establece la celda como vacía en el tablero
+            } else if (value.length === 1 && /^[1-L]$/.test(value)) {
                 input.style.color = 'black';
                 const id = input.id;
                 const [row, col] = id.split("_").slice(1);
