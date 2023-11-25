@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
     <title>Sudoku </title>
+    <meta charset="UTF-8">
+    <!-- La etiqueta meta viewport es esencial para que los navegadores móviles
+    presenten correctamente el contenido en dispositivos de diferentes 
+    tamaños y resoluciones. Específicamente, controla el ancho y la escala del contenido en los navegadores móviles. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="bootstrap_4_0/css/bootstrap.min.css">
-
     <link rel="stylesheet" type="text/css" href="css/sudoku.css">
     <style>
     </style>
@@ -35,13 +39,11 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="#" onclick="countNumbers()">Contabilizar</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Otros</a>
-                </li>
             </ul>
         </div>
     </nav>
 
+    <!-- Oculta el input de tipo file para personalizar su apariencia -->
     <input type="file" id="fileInput" accept=".csv" style="display: none;">
 
     <table class="table table-bordered">

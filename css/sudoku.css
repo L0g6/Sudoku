@@ -76,3 +76,11 @@
         .navbar {
             background: #FF7A59;
         }
+        /* Para asegurar la compatibilidad con una amplia gama de navegadores,
+        puedes usar la propiedad text-size-adjust junto con el prefijo 
+        -webkit- para adaptarte a Chrome, Safari y otros navegadores basados en WebKit. */
+        html {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
