@@ -80,7 +80,7 @@
             return sudokuBoard;
         }
 
-        
+
 
         function guardarSudoku(sudokuBoard) {
             let csvContent = '';
@@ -260,59 +260,99 @@ height: ${600 / L}px; /* Establece la altura igual al ancho para formar un cuadr
 
         function validateInput(input) {
             const value = input.value;
-            if (value === '') { // Si el valor es vacío, borra el número
-                const id = input.id;
+                            const id = input.id;
                 const [row, col] = id.split("_").slice(1);
                 const rowIndex = parseInt(row);
                 const colIndex = parseInt(col);
-                sudokuBoard[rowIndex][colIndex] = '0'; // Establece la celda como vacía en el tablero
-            } else if (value.length === 1 && /^[1-L]$/.test(value)) {
-                input.style.color = 'black';
-                const id = input.id;
-                const [row, col] = id.split("_").slice(1);
-                const rowIndex = parseInt(row);
-                const colIndex = parseInt(col);
-                sudokuBoard[rowIndex][colIndex] = value;
-            } else {
-                input.style.color = 'red';
+
+                if (value === '') {
+                    sudokuBoard[rowIndex][colIndex] = '0'; // Establece la celda como vacía en el tablero
+                    input.style.color = 'black';
+                    return;
+                }
+
+                if (value.length === 1 && /^[1-9]$/.test(value)) {
+                    // Valida el input y establece el color del texto según la validez
+                    input.style.color = isValid(rowIndex, colIndex, value) ? 'black' : 'red';
+                    // Si es válido, actualiza el valor en el tablero; si no, mantiene la celda como vacía
+                    sudokuBoard[rowIndex][colIndex] = isValid(rowIndex, colIndex, value) ? value : '0';
+                } else {
+                    input.style.color = 'red'; // Color de texto en rojo para entradas no válidas
+                }
             }
-        }
-        function loadSudokuFromCSV() {
-            const fileInput = document.getElementById('fileInput');
-            fileInput.click(); // Abre el selector de archivos
 
-            fileInput.onchange = function () {
-                const file = fileInput.files[0];
+            function isValid(row, col, value) {
+                // Comprueba si el número cumple con las reglas del Sudoku
+                return (
+                    isRowValid(row, value) &&
+                    isColumnValid(col, value) &&
+                    isSubGridValid(Math.floor(row / lg) * lg, Math.floor(col / lg) * lg, value)
+                );
+            }
 
-                if (file) {
-                    const reader = new FileReader();
+            function isRowValid(row, value) {
+                // Verifica si el número no está presente en la fila dada
+                return !sudokuBoard[row].includes(value);
+            }
 
-                    reader.onload = function (e) {
-                        const contents = e.target.result;
-                        const lines = contents.split('\n');
+            function isColumnValid(col, value) {
+                // Verifica si el número no está presente en la columna dada
+                for (let i = 0; i < L; i++) {
+                    if (sudokuBoard[i][col] === value) {
+                        return false;
+                    }
+                }
+                return true;
+            }
 
-                        // Actualizar el tablero con los datos del CSV
+            function isSubGridValid(startRow, startCol, value) {
+                // Verifica si el número no está presente en la submatriz dada
+                for (let i = startRow; i < startRow + lg; i++) {
+                    for (let j = startCol; j < startCol + lg; j++) {
+                        if (sudokuBoard[i][j] === value) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
 
-                        for (let i = 0; i < lines.length; i++) {
-                            const values = lines[i].trim().split(',');
-                            for (let j = 0; j < values.length; j++) {
-                                const cellId = `cell_${i}_${j}`;
-                                const cell = document.getElementById(cellId);
-                                if (cell && values[j] !== '0') {
-                                    cell.value = values[j];
-                                    sudokuBoard[i][j] = values[j];
+            function loadSudokuFromCSV() {
+                const fileInput = document.getElementById('fileInput');
+                fileInput.click(); // Abre el selector de archivos
+
+                fileInput.onchange = function () {
+                    const file = fileInput.files[0];
+
+                    if (file) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            const contents = e.target.result;
+                            const lines = contents.split('\n');
+
+                            // Actualizar el tablero con los datos del CSV
+
+                            for (let i = 0; i < lines.length; i++) {
+                                const values = lines[i].trim().split(',');
+                                for (let j = 0; j < values.length; j++) {
+                                    const cellId = `cell_${i}_${j}`;
+                                    const cell = document.getElementById(cellId);
+                                    if (cell && values[j] !== '0') {
+                                        cell.value = values[j];
+                                        sudokuBoard[i][j] = values[j];
+                                    }
                                 }
                             }
-                        }
-                    };
+                        };
 
-                    reader.readAsText(file);
-                } else {
-                    console.error('No se ha seleccionado ningún archivo.');
-                }
-            };
-        }
-    const sudokuBoard = generateSudokuTable(L); // Se crea la tabla en pantalla y el array de sudoku
+                        reader.readAsText(file);
+                    } else {
+                        console.error('No se ha seleccionado ningún archivo.');
+                    }
+                };
+            }
+            const sudokuBoard = generateSudokuTable(L); // Se crea la tabla en pantalla y el array de sudoku
     </script>
 
     <script src="js/jquery-3.7.1.slim.min.js"></script>
